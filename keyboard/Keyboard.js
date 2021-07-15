@@ -27,16 +27,16 @@ let letters = [
   "space",
   "upward",
 ];
+
 let output = "";
+
+//Object that handles the entire KEYPAD
 const Keyboard = {
+  //These elements act as major div tag for the keypad
   elements: {
     main: null,
     keysContainer: null,
     keys: [],
-  },
-  properties: {
-    value: null,
-    capsLock: false,
   },
   init() {
     // Create Main Elements
@@ -56,6 +56,7 @@ const Keyboard = {
     this.elements.main.appendChild(this.elements.keysContainer);
     document.body.appendChild(this.elements.main);
   },
+
   _createKeys() {
     const fragment = document.createDocumentFragment();
 
@@ -67,6 +68,8 @@ const Keyboard = {
     for (i = 0; i <= 12; i++) {
       let counter = 0;
       const keyElement = document.createElement("button");
+
+      //for line breaks
       const insertLineBreak = ["3", "6", "9", "#"].indexOf(numbers[i]) !== -1;
 
       keyElement.setAttribute("type", "button");
@@ -115,6 +118,7 @@ const Keyboard = {
           let content = text.innerHTML;
           content = content.replace("<br>", "");
 
+          //For LongPress
           keyElement.addEventListener("mousedown", () => {
             presstimer = setTimeout(() => {
               output += content[0];
@@ -132,17 +136,19 @@ const Keyboard = {
             }
           });
 
+          //For OnClick
           keyElement.addEventListener("click", () => {
             if (presstimer !== null) {
               clearTimeout(presstimer);
               presstimer = null;
             }
-            console.log(longpress);
+
             counter++;
             if (!longpress) {
               if (counter == 1) {
                 output += content[1];
                 document.getElementById("display").value = output;
+
                 setTimeout(() => {
                   counter = 0;
                 }, 1500);
