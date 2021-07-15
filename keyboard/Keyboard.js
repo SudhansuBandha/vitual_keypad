@@ -100,6 +100,7 @@ const Keyboard = {
 
         case "clear":
           text.innerHTML = createIconHTML("keyboard_backspace");
+
           keyElement.addEventListener("click", () => {
             output = output.substring(0, output.length - 1);
             document.getElementById("display").value = output;
@@ -109,45 +110,64 @@ const Keyboard = {
 
         default:
           text.innerHTML = numbers[i] + "<br>" + letters[i];
-          keyElement.addEventListener("click", () => {
-            let content = text.innerHTML;
-            content = content.replace("<br>", "");
+          let presstimer = null;
+          let longpress = false;
+          let content = text.innerHTML;
+          content = content.replace("<br>", "");
 
-            if (counter == 0) {
+          keyElement.addEventListener("mousedown", () => {
+            presstimer = setTimeout(() => {
               output += content[0];
+              longpress = true;
               document.getElementById("display").value = output;
-              counter++;
+            }, 1000);
+          });
 
-              setTimeout(() => {
-                counter = 0;
-              }, 3000);
-            } else if (counter % content.length == 0) {
-              output = output.toString().replace(/.$/, content[0]);
+          keyElement.addEventListener("mouseout", () => {
+            if (presstimer !== null) {
+              clearTimeout(presstimer);
 
-              document.getElementById("display").value = output;
-              counter++;
-            } else if (counter % content.length == 1) {
-              output = output.toString().replace(/.$/, content[1]);
-
-              document.getElementById("display").value = output;
-              counter++;
-            } else if (counter % content.length == 2) {
-              output = output.toString().replace(/.$/, content[2]);
-
-              document.getElementById("display").value = output;
-              counter++;
-            } else if (counter % content.length == 3) {
-              output = output.toString().replace(/.$/, content[3]);
-
-              document.getElementById("display").value = output;
-              counter++;
-            } else {
-              output = output.toString().replace(/.$/, content[4]);
-
-              document.getElementById("display").value = output;
-              counter++;
+              presstimer = null;
+              longpress = false;
             }
           });
+
+          keyElement.addEventListener("click", () => {
+            if (presstimer !== null) {
+              clearTimeout(presstimer);
+              presstimer = null;
+            }
+            console.log(longpress);
+            counter++;
+            if (!longpress) {
+              if (counter == 1) {
+                output += content[1];
+                document.getElementById("display").value = output;
+                setTimeout(() => {
+                  counter = 0;
+                }, 1500);
+              } else if (counter % content.length == 1) {
+                output = output.toString().replace(/.$/, content[1]);
+                document.getElementById("display").value = output;
+              } else if (counter % content.length == 0) {
+                output = output.toString().replace(/.$/, content[0]);
+                document.getElementById("display").value = output;
+              } else if (counter % content.length == 2) {
+                output = output.toString().replace(/.$/, content[2]);
+                document.getElementById("display").value = output;
+              } else if (counter % content.length == 3) {
+                output = output.toString().replace(/.$/, content[3]);
+                document.getElementById("display").value = output;
+              } else {
+                output = output.toString().replace(/.$/, content[4]);
+                document.getElementById("display").value = output;
+              }
+            } else {
+              longpress = false;
+              counter = 0;
+            }
+          });
+
           break;
       }
 
