@@ -190,6 +190,9 @@ const Keyboard = {
   },
 };
 
+const textChange = (val) => {
+  output = val;
+};
 window.addEventListener("DOMContentLoaded", () => {
   Keyboard.init();
 });
